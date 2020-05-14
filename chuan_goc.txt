@@ -1,0 +1,57 @@
+'Main program 1
+If M_02#=0 Or M_02#=1 Or M_02#=5 Then
+    GoTo *LOADER
+EndIf
+''///////////////////////////////////
+If M_02#=2 Then
+    GoTo *HAMMER
+EndIf
+''///////////////////////////////////
+If M_02#=3 Or M_02#=4 Then
+    GoTo *UNLOADER
+EndIf
+''///////////////////////////////////
+*LOADER
+M_02#=0
+Mvs p10 ''Mov p10+(+0.00,+0.00,+100.00)
+M_Out(10160)=0
+Wait M_In(10064)=1 'Conveyor1 Ready'
+Mvs p11
+M_Out(10160)=1 'Hand clamp
+M_02#=1
+Dly 0.1
+M_Out(10112)=1 'Unclamp conveyor
+Dly 0.05
+M_Out(10112)=0
+Dly 0.1
+Wait M_In(10080)=1 'CONVEYOR 1 OPEN THE PRODUCT
+M_02#=2
+Mvs p10
+M_Out(10128)=1 'Conveyor keeps running'
+Dly 0.05
+M_Out(10128)=0
+*HAMMER
+Mvs p21
+Wait M_In(10016)=1 'Hammer Ready'
+Mvs p20
+Mvs p22
+''///////////////////////////////////
+M_Out(10176)=1'Hammer Down'
+Dly 0.05
+M_Out(10176)=0
+M_02#=3
+Wait M_In(10016)=1 'Hammer Ready'
+''///////////////////////////////////
+*UNLOADER
+M_02#=4
+Mvr p20,p30,p31 ''Mov p20''Mov p30''Mov p31
+Wait M_In(10096)=1 'Conveyor2 Ready'
+Mvs p32
+M_02#=0
+M_Out(10160)=0 'unclamp hand'
+Mvs p31
+M_Out(10144)=1 'Robot finished'
+Dly 0.05
+M_Out(10144)=0
+Mvs p30
+End
